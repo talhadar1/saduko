@@ -1,5 +1,5 @@
 /*
- * This program is a Saduko game
+ * This program is a Saduko game - Final project
  *
  * The program include's 4 modules:
  * 	1. Parser Module 	- Reads the user commands , parse them and send them to the Game module.
