@@ -23,9 +23,10 @@
 
 
 int main(int argc, char **argv){
+
 	Box **board;											/*Game board Pointer*/
 	Box** solved_board = (Box**)malloc_board(Table_Size);	/*Solution board initialization*/
-	if (argc==2){
+	if (argc == 2){
 		srand(atoi(argv[1]));}								/*Get the "SEED" provided to the program*/
 	SP_BUFF_SET();
 	/*RUN_GAME*/
@@ -35,6 +36,8 @@ int main(int argc, char **argv){
 	/*GAME OVER*/
 	free_board (board ,Table_Size);							/*deallocate Memory of Game board*/
 	free_board (solved_board ,Table_Size);					/*deallocate Memory of Solution board*/
+
+
 	return 0;
 }/* END OF MAIN */
 

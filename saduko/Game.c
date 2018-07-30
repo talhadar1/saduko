@@ -40,28 +40,37 @@ int valueExsists(int* arr, int value) {
  * @param table_size
  * @param block_size
  */
-void print_board(Box **board, int table_size, int block_size) {
-	int row, column;
 
-	printf("----------------------------------\n");
+void print_board(Box **board, int table_size, int block_size) {
+	int row, column, i;
+	int block_clmns = block_size; /* block_clmns = Number of columns in block*/
+	/*int block_rows = table_size / block_clmns;*/ /* block_rows = Number of rows in block*/
+	for (i = 0; i < (4 * table_size + block_clmns + 1); i++) { /* Print Separator row*/
+		printf("-");
+	}
+	printf("\n");
 	for (row = 0; row < table_size; ++row) {
 		for (column = 0; column < table_size; ++column) {
-			if (column % block_size == 0) {
-				printf("| ");
+			if (column % block_clmns == 0) {
+				printf("|");
 			}
 			if (board[row][column].value == 0) { /*empty cell for zero value*/
-				printf("   ");
+				printf("    ");
 			} else {
-				if (board[row][column].fixed == 1) {
-					printf(".%d ", board[row][column].value);
+				if (board[row][column].fixed == 1) {     		 /*if the cell is Fixed */
+					printf(".%2d ", board[row][column].value);
 				} else {
-					printf(" %d ", board[row][column].value);
+					printf(" %2d ", board[row][column].value);
+					/*	'*' for an erroneous cell when in Edit  mode or the "Mark errors" parameter is set to 1, or space otherwise.  */
 				}
 			}
 		}
 		printf("|\n");
 		if (row % block_size == block_size - 1) {
-			printf("----------------------------------\n");
+			for (i = 0; i < (4 * table_size + block_clmns + 1); i++) { /* Print Separator row*/
+				printf("-");
+			}
+			printf("\n");
 		}
 	}
 }
@@ -80,9 +89,11 @@ void print_board(Box **board, int table_size, int block_size) {
  */
 Box **build_board(Box **board, int numOfcells, Box** solved_board,
 		int table_size, int block_size) {
-	int i, j, k;
+	int i;
 	for (i = 0; i < table_size; ++i) {
+		int j;
 		for (j = 0; j < table_size; ++j) {
+			int k;
 			board[i][j].value = 0;
 			board[i][j].fixed = 0;
 			for (k = 0; k < table_size; ++k) {
@@ -284,7 +295,7 @@ int run_game(Box **board, Box **solved_board, int table_size, int block_size) {
 			}
 		} else if (user_command->comannd == 'r') { /*RESTART COMANNED*/
 			free(user_command);
-			free_board(board,table_size);
+			free_board(board, table_size);
 			return 0;
 		} else if (user_command->comannd == 'e') { /*EXIT COMANNED*/
 			printf("Exiting...");
