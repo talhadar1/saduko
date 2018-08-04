@@ -18,6 +18,7 @@
 #define GAME_H_
 #define  Table_Size 9 /*Integer constant*/
 #define  Block_Size 3 /*Integer constant*/
+extern char GameMode;  /*i - Init_Mode ; e - Edit_Mode ; s - Solve_Mode */
 
 /**
  * 'Box' is the structure of a single Cell it contains:

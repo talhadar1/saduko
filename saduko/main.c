@@ -7,11 +7,9 @@
  * 	3. Solver Module	- This module implements the Backtrack algorithms. that helps to generate the saduko puzzle and solve it.
  * 	3. Main_aux Module	- This module implements Game board memory allocation/deallocation methods.
  *
-
  * This game default table dimensions   - 9X9 cells. can be modify at Game.h file
  *
- *
- * Written by Tal Hadar 200443968  &   Matan Richker 201263563 at 20/05/18.
+ * Written by Tal Hadar 200443968 & Matan Richker 201263563 at 20/05/18.
  */
 
 #include <stdio.h>
@@ -21,9 +19,7 @@
 #include "Game.h"
 #include "Main_aux.h"
 
-
 int main(int argc, char **argv){
-
 	Box **board;											/*Game board Pointer*/
 	Box** solved_board = (Box**)malloc_board(Table_Size);	/*Solution board initialization*/
 	if (argc == 2){
@@ -36,7 +32,6 @@ int main(int argc, char **argv){
 	/*GAME OVER*/
 	free_board (board ,Table_Size);							/*deallocate Memory of Game board*/
 	free_board (solved_board ,Table_Size);					/*deallocate Memory of Solution board*/
-
 
 	return 0;
 }/* END OF MAIN */
