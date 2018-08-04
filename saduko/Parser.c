@@ -18,7 +18,18 @@
  * 'h'- for "hint"
  * 'v'- for "validate"
  * 'r'- for "restart"
+ * 'S'- for "solve"
  * 'e'- for "exit"
+ * 'E'- for "edit"
+ * 'm'- for "mark_errors"
+ * 'p'- for "print_board"
+ * 'g'- for "generate"
+ * 'U'- for "Undo"
+ * 'R'- for "Redo"
+ * 'F'- for "save"
+ * 'n'- for "num_solutions"
+ * 'a'- for "autofill"
+ * 'M'- for "Print_MODE"
  */
 char commmand_chack(char* input) {
 	int rc = strcmp(input, "set"); /*SET COMMAND */
@@ -41,9 +52,54 @@ char commmand_chack(char* input) {
 	if (rc == 0) {
 		return 'e';
 	}
+	rc = strcmp(input, "solve"); /*SOLVE-MODE COMMAND */
+	if (rc == 0) {
+		return 'S'; /*UPPER CASE*/
+	}
+	rc = strcmp(input, "edit"); /*EDIT-MODE COMMAND */
+	if (rc == 0) {
+		return 'E'; /*UPPER CASE*/
+	}
+	rc = strcmp(input, "mark_errors"); /*mark errors COMMAND */
+	if (rc == 0) {
+		return 'm';
+	}
+	rc = strcmp(input, "print_board"); /*print board COMMAND */
+	if (rc == 0) {
+		return 'p';
+	}
+	rc = strcmp(input, "generate"); /*generate puzzel COMMAND */
+	if (rc == 0) {
+		return 'g';
+	}
+	rc = strcmp(input, "undo"); /*Undo(return) COMMAND */
+	if (rc == 0) {
+		return 'U'; /*UPPER CASE*/
+	}
+	rc = strcmp(input, "redo"); /*Redo (proceed) COMMAND */
+	if (rc == 0) {
+		return 'R'; /*UPPER CASE*/
+	}
+	rc = strcmp(input, "save"); /*Save File COMMAND */
+	if (rc == 0) {
+		return 'F';
+	}
+	rc = strcmp(input, "num_solutions"); /*number of solutions COMMAND */
+	if (rc == 0) {
+		return 'n';
+	}
+	rc = strcmp(input, "autofill"); /*autofill solution COMMAND */
+	if (rc == 0) {
+		return 'a';
+	}
+	rc = strcmp(input, "mode"); /*print_current_mode COMMAND */
+	if (rc == 0) {
+		return 'M';
+	}
+
 	return '0';
 }
-
+/*letters in use: s,h,v,r,e,S,E,m,p,g,U,R,F,n,a,M*/
 /**
  * move_input:
  * This function gets the user move from the keyboard and enters it to 'Move' structure and returns it
@@ -56,7 +112,7 @@ Move* move_input() {
 	char cmd = '0';
 	const char delimiter[] = " \t\r\n";
 	Move* user_move = malloc(sizeof(Move));
-	if(user_move==NULL){
+	if (user_move == NULL) {
 		printf("Error: <malloc> has failed\n");
 		exit(0);
 	}
@@ -92,4 +148,6 @@ Move* move_input() {
 	}
 	return user_move;
 }/*END OF  MOVE_INPUT*/
+
+
 

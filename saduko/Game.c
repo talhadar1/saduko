@@ -13,7 +13,7 @@
 #include "Parser.h"
 #include "Game.h"
 #include "Solver.h"
-
+char GameMode = 'i';
 /**
  * valueExsists:
  * this method gets a value and array and returns if the  value is inside the array
@@ -44,7 +44,7 @@ int valueExsists(int* arr, int value) {
 void print_board(Box **board, int table_size, int block_size) {
 	int row, column, i;
 	int block_clmns = block_size; /* block_clmns = Number of columns in block*/
-	/*int block_rows = table_size / block_clmns;*/ /* block_rows = Number of rows in block*/
+	/*int block_rows = table_size / block_clmns;*//* block_rows = Number of rows in block*/
 	for (i = 0; i < (4 * table_size + block_clmns + 1); i++) { /* Print Separator row*/
 		printf("-");
 	}
@@ -57,7 +57,7 @@ void print_board(Box **board, int table_size, int block_size) {
 			if (board[row][column].value == 0) { /*empty cell for zero value*/
 				printf("    ");
 			} else {
-				if (board[row][column].fixed == 1) {     		 /*if the cell is Fixed */
+				if (board[row][column].fixed == 1) { /*if the cell is Fixed */
 					printf(".%2d ", board[row][column].value);
 				} else {
 					printf(" %2d ", board[row][column].value);
@@ -241,6 +241,60 @@ int board_check(Box **board, int table_size) {
 	return 1;
 }
 
+void invalid_command() {
+	printf("Error: invalid command\n");
+}
+void set_command(Move* user_command, Box **board, int table_size,
+		int block_size, int board_status, int game_stat, int status) {
+	if (board_status == 0) { /*check if board not solved*/
+		status = set_cell(board, user_command, table_size, block_size);
+		if (status == 0) { /*legal set*/
+			print_board(board, table_size, block_size); /*cell is update print board*/
+			board_status = board_check(board, table_size);
+			if (board_status == 1) {
+				printf("Puzzle solved successfully\n");
+				/*after this print only exit or restart available*/
+			}
+		}
+	} else {
+		invalid_command();
+	}
+}
+
+void validate_command(Box **board, Box **solved_board, int table_size, int block_size,int board_status, int game_stat) {
+	if (board_status != 1) { /*check if board not solved*/
+		game_stat = isValidate(board, solved_board, table_size, block_size);
+		if (game_stat == 1) {
+			printf("Validation passed: board is solvable\n");
+		} else {
+			printf("Validation failed: board is unsolvable\n");
+		}
+	} else {
+		invalid_command();
+	}
+}
+
+void hint_command (int board_status,Move *user_command,Box **solved_board){
+	if (board_status != 1) { /*check if board not solved*/
+		printf("Hint: set cell to %d\n",
+				hint(user_command, solved_board));
+	} else {
+		invalid_command();
+	}
+}
+char* print_mode(){
+	if (GameMode == 'i'){
+		return "Initiallize_mode";
+	}
+	else if (GameMode == 'e'){
+		return "Edit Mode";
+	}
+	else if (GameMode == 's'){
+		return "Solve Mode";
+	}
+return "Error";
+}
+
 /**
  * run_game:
  * This method run game according to command's from user until exit/restart command are given by the user
@@ -260,39 +314,12 @@ int run_game(Box **board, Box **solved_board, int table_size, int block_size) {
 	do {
 		user_command = move_input();
 		if (user_command->comannd == 's') { /*SET COMANNED*/
-			if (board_status == 0) { /*check if board not solved*/
-				status = set_cell(board, user_command, table_size, block_size);
-				if (status == 0) { /*legal set*/
-					print_board(board, table_size, block_size); /*cell is update print board*/
-					board_status = board_check(board, table_size);
-					if (board_status == 1) {
-						printf("Puzzle solved successfully\n");
-						/*after this print only exit or restart available*/
-					}
-				}
-			} else {
-				printf("Error: invalid command\n");
-			}
-
+			set_command(user_command, board, table_size, block_size,
+					board_status, game_stat, status);
 		} else if ((user_command->comannd == 'v')) { /*VALIDATE COMANNED*/
-			if (board_status != 1) { /*check if board not solved*/
-				game_stat = isValidate(board, solved_board, table_size,
-						block_size);
-				if (game_stat == 1) {
-					printf("Validation passed: board is solvable\n");
-				} else {
-					printf("Validation failed: board is unsolvable\n");
-				}
-			} else {
-				printf("Error: invalid command\n");
-			}
+			validate_command(board,solved_board, table_size,block_size,board_status, game_stat);
 		} else if ((user_command->comannd == 'h')) { /*HINT COMANNED*/
-			if (board_status != 1) { /*check if board not solved*/
-				printf("Hint: set cell to %d\n",
-						hint(user_command, solved_board));
-			} else {
-				printf("Error: invalid command\n");
-			}
+			hint_command (board_status,user_command,solved_board);
 		} else if (user_command->comannd == 'r') { /*RESTART COMANNED*/
 			free(user_command);
 			free_board(board, table_size);
@@ -301,9 +328,40 @@ int run_game(Box **board, Box **solved_board, int table_size, int block_size) {
 			printf("Exiting...");
 			free(user_command);
 			return 1;
-		}
+		} else if ((user_command->comannd == 'S')) { /*Solve-Mode COMANNED*/
+			printf("Solve-Mode COMANNED \n");
+			/*ENTER CODE HERE*/
+		} else if ((user_command->comannd == 'E')) { /*Edit-Mode COMANNED*/
+			printf("Edit-Mode COMANND \n");
+			/*ENTER CODE HERE*/
+		} else if ((user_command->comannd == 'm')) { /*mark_errors-Mode COMANNED*/
+			printf("mark_errors COMANND \n");
+			/*ENTER CODE HERE*/
+		} else if ((user_command->comannd == 'g')) { /*generate COMANNED*/
+			printf("generate COMANND \n");
+			/*ENTER CODE HERE*/
+		} else if ((user_command->comannd == 'U')) { /*UNDO COMANNED*/
+			printf("UNDO COMANND \n");
+			/*ENTER CODE HERE*/
+		} else if ((user_command->comannd == 'R')) { /*REDO COMANNED*/
+			printf("REDO COMANND \n");
+			/*ENTER CODE HERE*/
+		} else if ((user_command->comannd == 'F')) { /*save COMANNED*/
+			printf("Save COMANND \n");
+			/*ENTER CODE HERE*/
+		} else if ((user_command->comannd == 'n')) { /*num_solutions COMANNED*/
+			printf("num_solutions COMANND \n");
+			/*ENTER CODE HERE*/
+		} else if ((user_command->comannd == 'a')) { /*autofill COMANNED*/
+			printf("autofill COMANND \n");
+			/*ENTER CODE HERE*/
+		} else if ((user_command->comannd == 'M')) { /*print_current_mode COMANNED*/
+				printf("Current_Mode: %s \n",print_mode());
+			}
 		free(user_command);
 	} while (1);
 	return 0;
 }/*END OF RUN_GAME*/
+
+/*new method's */
 
